@@ -6,7 +6,7 @@ tags: [labs, docker, containers, hands-on]
 
 # :material-docker: Docker Labs
 
-> **4 focused labs covering essential Docker skills for production environmentss.**
+> **4 focused labs covering essential Docker skills for production environments.**
 
 ---
 
