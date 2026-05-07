@@ -1,0 +1,33 @@
+name: Trigger Portal Rebuild
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**.md"    # Trigger only on Markdown content changes
+      - "**.yml"   # Or navigation/config changes
+
+jobs:
+  dispatch:
+    name: Notify learning-portal
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send repository_dispatch to learning-portal
+        uses: actions/github-script@v9
+        with:
+          # REQUIRED: A PAT secret named PORTAL_DISPATCH_TOKEN 
+          # with Actions:Write on senvishal02/learning-portal
+          github-token: ${{ secrets.PORTAL_DISPATCH_TOKEN }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'senvishal02',
+              repo:  'learning-portal',
+              event_type: 'content-update',
+              client_payload: {
+                source_repo:   '${{ github.repository }}',
+                source_branch: '${{ github.ref_name }}',
+                commit_sha:    '${{ github.sha }}',
+                triggered_by:  '${{ github.actor }}'
+              }
+            });
+            console.log('✅ Dispatch sent successfully to senvishal02/learning-portal');
